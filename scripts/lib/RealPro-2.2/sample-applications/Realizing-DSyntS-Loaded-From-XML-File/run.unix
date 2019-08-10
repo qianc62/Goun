@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Start the application:  RealPro_XML_File_App
+#
+
+java -classpath .:../../lib:../../lib/rpw.jar:../../lib/rpw-lkb.jar:../../lib/xalan.jar:../../lib/xml-apis.jar:../../lib/xercesImpl.jar   RealPro_XML_File_App  dsynts.xml
+
+

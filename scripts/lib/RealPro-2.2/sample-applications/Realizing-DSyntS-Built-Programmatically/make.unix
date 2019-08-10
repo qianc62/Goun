@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Compile the Java application:  RealPro_Prog_DSyntS_Building_App
+#
+
+javac -classpath .:../../lib:../../lib/rpw.jar:../../lib/rpw-lkb.jar:../../lib/xalan.jar:../../lib/xml-apis.jar:../../lib/xercesImpl.jar   RealPro_Prog_DSyntS_Building_App.java 
+
+

@@ -1,0 +1,947 @@
+<HTML>
+<TITLE>
+RealPro
+</TITLE>
+
+<BODY>
+<H1>Application Samples</H1>
+
+This version of <TT>RealPro</TT> is provided with application samples
+illustrating how to use <TT>RealPro</TT> API:
+<P>
+
+<UL>
+  <LI><A HREF="#Realizing-DSyntS-Built-Programmatically">Realizing DSyntS Built Programmatically</A></LI>
+  <LI><A HREF="#Realizing-DSyntS-Loaded-From-DSS-File">Realizing DSyntS Loaded From DSS Files</A></LI>
+  <LI><A HREF="#Realizing-DSyntS-Loaded-From-XML-File">Realizing DSyntS Loaded From XML Files</A></LI>
+</UL>
+
+<P>
+
+
+<TT>RealPro</TT> can also be used with the
+<A HREF="http://www.cogentex.com/systems/exemplars" target=new>Exemplars Framework</A> in
+order to build syntactic-based text generation applications.  For more information,
+see the documentation and the application samples provided with the
+<A HREF="http://www.cogentex.com/systems/exemplars" target=new>Exemplars Framework</A>.
+
+<P>
+
+
+<HR>
+
+<A NAME=Realizing-DSyntS-Built-Programmatically></A>
+<BR>
+<P>
+<BR>
+<H2>Realizing DSyntS Built Programmatically</H2>
+
+<H3>Description</H3>
+
+<blockquote>
+This application illustrates how to use
+the <A HREF="http://www.w3.org/DOM" target=new>DOM (Document Object Model)</A>
+API in order to build Deep-Syntactic Structures (DSyntSs) programatically and
+how to use <TT>RealPro</TT> API in order to realize
+these DSyntSs.
+</blockquote>
+
+
+<H3>Application</H3>
+
+<blockquote>
+<PRE>
+import com.cogentex.real.api.RealProMgr;     //RealPro Manager
+import org.w3c.dom.*;                        //Definition of DOM classes
+import org.apache.xerces.dom.DocumentImpl;   //Implementation of DOM Document
+
+/**
+ * RealPro application for realizing DSyntSs built programmatically.
+ */
+public class RealPro_Prog_DSyntS_Building_App
+{
+   /* RealPro Manager to be instantiated once during the initialization of the application.*/
+   private RealProMgr realproMgr = null;
+
+   /**
+    * Main function called from command line.  No paramater are required.
+    *
+    * Usage:   java -classpath ... RealPro_Prog_DSyntS_Building_App
+    */
+   public static void main(String args[])
+   {
+      RealPro_Prog_DSyntS_Building_App app = new RealPro_Prog_DSyntS_Building_App();
+      app.buildDocument();
+   }
+
+   /**
+    * Class constructor.
+    */
+   public RealPro_Prog_DSyntS_Building_App()
+   {
+      //Create an instance of RealPro Manager with its default configuration
+      System.out.println("\nInitializing RealPro (this will take few seconds) ......");
+
+      realproMgr = new RealProMgr();
+
+      //Verify if the RealPro Manager has been initialized correctly.
+      if (!realproMgr.isInitialized())
+      {
+         System.out.println("Initializing RealPro ... failed; " + realproMgr.getErrorMsg() + "\n");
+      }
+      else
+      {
+         System.out.println("Initializing RealPro ... completed.");
+      }
+   }
+
+   /**
+    * Method used for building and processing Deep-Syntactic Structures (DSyntSs).
+    */
+   public void buildDocument( )
+   {
+      try
+      {
+         //Verify if the RealPro Manager has been initialized correctly.
+         if (!realproMgr.isInitialized())
+         {
+            System.out.println("\nRealPro Manager not initialized; " + realproMgr.getErrorMsg() + "\n");
+            return;
+         }
+
+         //Create an instance of document used for creating the DSyntS*/
+         System.out.println("\nCreating document instance ...");
+         org.w3c.dom.Document document = (Document) new org.apache.xerces.dom.DocumentImpl();
+
+         //Process DSyntS #1
+         System.out.println("\n--------------------------------------------\n");
+         System.out.println("\nBuilding DSyntS #1 ...");
+         Element dsynts1 = buildDSyntS1(document);
+         processDSyntS(dsynts1);
+
+         //Process DSyntS #2
+         System.out.println("\n--------------------------------------------\n");
+         System.out.println("\nBuilding DSyntS #2 ...");
+         Element dsynts2 = buildDSyntS2(document);
+         processDSyntS(dsynts2);
+
+         return;
+      }
+      catch (Exception e)
+      {
+         System.out.println("\nException encountered: " + e.toString() + "\n");
+         return;
+      }
+   }
+
+   /**
+    * Method used for processing a Deep-Syntactic Structures (DSyntS).
+    */
+   public void processDSyntS( org.w3c.dom.Element dsynts )
+   {
+      try
+      {
+         System.out.println("\nProcessing DSyntS ...");
+
+         //Set tabulation for printing resulting trees and sentences
+         String tabulation = "  ";
+
+         //Print DSyntS
+         System.out.println("\nPrinting DSyntS (XML format) ...\n");
+         System.out.println(realproMgr.toXMLString(dsynts,true,tabulation));
+
+         System.out.println("\nPrinting DSyntS (DSS format) ...\n");
+         System.out.println(realproMgr.toDSSString(dsynts,true,tabulation));
+
+         //Check validity of DSyntS
+         System.out.println("\nChecking validity ...");
+         if (!realproMgr.validDSyntS(dsynts))
+         {
+            System.out.println("\nDSyntS invalid; " + realproMgr.getErrorMsg());
+            return;
+         }
+
+         //Realize DSyntS
+         System.out.println("\nRealizing DSyntS ...");
+         org.w3c.dom.DocumentFragment fragmentSentence = realproMgr.realize(dsynts);
+
+         //If the realization is successful, print the resulting sentence structure
+         //contained in the fragment and replace the DSyntS with the realized DSyntS
+         //in the document. Otherwise, print the realization error message.
+         if (fragmentSentence.hasChildNodes())
+         {
+            System.out.println("\nResulting sentence structure:\n");
+            System.out.println(realproMgr.toXMLString(fragmentSentence,true,tabulation));
+
+            System.out.println("\nResulting sentence string:\n");
+            System.out.println(tabulation + realproMgr.getSentenceString());
+         }
+         else
+         {
+            System.out.println("\nRealization failed:\n");
+            System.out.println(tabulation + realproMgr.getErrorMsg());
+         }
+         System.out.println();
+
+         return;
+      }
+      catch (Exception e)
+      {
+         System.out.println("\nException encountered: " + e.toString() + "\n");
+         return;
+      }
+   }
+
+
+   /**
+   * Method used to build a DSyntS corresponding to:
+   *
+   * 		 John loves Mary.
+   *
+   *   &lt;dsynts>
+   *       &lt;dsyntnode lexeme=love class=verb>
+   *          &lt;dsyntnode lexeme=John class=proper_noun rel=I/>
+   *          &lt;dsyntnode lexeme=Mary class=proper_noun rel=II/>
+   *       &lt;/dsyntnode>
+   *   &lt;/dsynts>
+   *
+   *
+   * The parameter &lt;i>document&lt;/i> is used as a factory for creating the
+   * DSyntS elements.
+   */
+   private org.w3c.dom.Element buildDSyntS1( org.w3c.dom.Document document )
+   {
+      try
+      {
+         //Create DSyntS
+         Element dsynts = document.createElement("dsynts");
+
+         Element governor = document.createElement("dsyntnode");
+         governor.setAttribute("lexeme", "love");
+
+         governor.setAttribute("class", "verb");
+
+         Element depI = document.createElement("dsyntnode");
+         depI.setAttribute("lexeme", "John");
+         depI.setAttribute("class", "proper_noun");
+
+         Element depII = document.createElement("dsyntnode");
+         depII.setAttribute("lexeme", "Mary");
+         depII.setAttribute("class", "proper_noun");
+
+         //Define Dependency Relationships
+         dsynts.appendChild(governor);
+
+         governor.appendChild(depI);
+         depI.setAttribute("rel", "I");
+
+         governor.appendChild(depII);
+         depII.setAttribute("rel","II");
+
+         //Return the DSyntS
+         return dsynts;
+      }
+      catch ( Exception e )
+      {
+         return null;
+      }
+   }
+
+
+   /**
+   * Method used to build a DSyntS corresponding to:
+   *
+   * 		John loves &lt;A HREF="url" target=new>Mary&lt;/A>.
+   *
+   *      &lt;dsynts>
+   *         &lt;dsyntnode lexeme=love class=verb>
+   *            &lt;dsyntnode lexeme=John class=proper_noun rel=I/>
+   *            &lt;B>
+   *            	 &lt;A HREF="url" target=new>
+   *                	&lt;dsyntnode lexeme=Mary class=proper_noun rel=II/>
+   *            	 &lt;/A>
+   *            &lt;/B>
+   *         &lt;/dsyntnode>
+   *      &lt;/dsynts>
+   *
+   * The parameter &lt;i>document&lt;/i> is used as a factory for creating the
+   * DSyntS elements.
+   */
+   private org.w3c.dom.Element buildDSyntS2( org.w3c.dom.Document document )
+   {
+      try
+      {
+         //Define Nodes
+         Element dsynts   = document.createElement("dsynts");
+
+         Element governor = document.createElement("dsyntnode");
+         governor.setAttribute("lexeme", "love");
+         governor.setAttribute("class", "verb");
+
+         Element depI = document.createElement("dsyntnode");
+         depI.setAttribute("lexeme", "John");
+         depI.setAttribute("class", "proper_noun");
+
+         //TAG B(old)
+         Element sgmlB = document.createElement("B");
+
+         //TAG A(nchor)
+         Element sgmlA = document.createElement("A");
+         sgmlA.setAttribute("HREF", "\"url\"");
+         sgmlA.setAttribute("target", "new");
+
+         Element depII = document.createElement("dsyntnode");
+         depII.setAttribute("lexeme", "Mary");
+         depII.setAttribute("class", "proper_noun");
+
+         //Define Relationships
+         dsynts.appendChild(governor);
+
+         governor.appendChild(depI);
+         depI.setAttribute("rel","I");
+
+         governor.appendChild(sgmlB);
+
+         sgmlB.appendChild(sgmlA);
+
+         sgmlA.appendChild(depII);
+
+         depII.setAttribute("rel","II");
+
+         //Return the DSyntS
+         return dsynts;
+      }
+      catch ( Exception e )
+      {
+        return null;
+      }
+   }
+}
+</PRE>
+</blockquote>
+
+
+<H3>Output Trace</H3>
+
+<blockquote>
+<PRE>
+Initializing RealPro (this will take few seconds) ......
+Initializing RealPro ... completed.
+
+Creating document instance ...
+
+--------------------------------------------
+
+
+Building DSyntS #1 ...
+
+Processing DSyntS ...
+
+Printing DSyntS (XML format) ...
+
+toXMLString...
+<dsynts><dsyntnode class="verb" lexeme="love"><dsyntnode class="proper_noun" lexeme="John" rel="I"></dsyntnode><dsyntnode class="proper_noun" lexeme="Mary" rel="II"></dsyntnode></d
+syntnode></dsynts>
+
+Printing DSyntS (DSS format) ...
+
+  "love" [ lexeme:"love" class:"verb" ]
+  (
+     I  "John" [ lexeme:"John" class:"proper_noun" rel:"I" ]
+     II  "Mary" [ lexeme:"Mary" class:"proper_noun" rel:"II" ]
+  )
+
+
+Checking validity ...
+
+Realizing DSyntS ...
+
+Resulting sentence structure:
+
+toXMLString...
+
+
+Resulting sentence string:
+
+  John loves Mary.
+
+
+--------------------------------------------
+
+
+Building DSyntS #2 ...
+
+Processing DSyntS ...
+
+Printing DSyntS (XML format) ...
+
+toXMLString...
+<dsynts><dsyntnode class="verb" lexeme="love"><dsyntnode class="proper_noun" lexeme="John" rel="I"></dsyntnode><B><A HREF="&quot;url&quot;" target="new"><dsyntnode class="proper_no
+un" lexeme="Mary" rel="II"></dsyntnode></A></B></dsyntnode></dsynts>
+
+Printing DSyntS (DSS format) ...
+
+  "love" [ lexeme:"love" class:"verb" ]
+  (
+     I  "John" [ lexeme:"John" class:"proper_noun" rel:"I" ]
+     II  "Mary" [ lexeme:"Mary" class:"proper_noun" rel:"II" between:sgml:"B" between:sgml:"A HREF=\"url\" target=new" ]
+  )
+
+
+Checking validity ...
+
+Realizing DSyntS ...
+
+Resulting sentence structure:
+
+toXMLString...
+
+
+Resulting sentence string:
+
+  John loves <B><A HREF="url" target=new>Mary</A></B>.
+
+Press any key to continue . . .
+</PRE>
+</blockquote>
+
+
+
+
+
+<HR>
+
+
+
+<A NAME=Realizing-DSyntS-Loaded-From-DSS-File></A>
+<BR>
+<P>
+<BR>
+<H2>Realizing DSyntS Loaded From DSS Files</H2>
+
+<H3>Description</H3>
+
+<blockquote>
+This application illustrates how to use <TT>RealPro</TT> API
+in order to load Deep-Syntactic Structures (DSyntSs) from files defined
+using the <A HREF="dsynts.html#DSS_DSyntS_Formalism">DSS file format</A>,
+and how to use <TT>RealPro</TT> API in order to
+realize these DSyntSs.
+</blockquote>
+
+
+
+<H3>Application</H3>
+
+<blockquote>
+<PRE>
+
+import com.cogentex.real.api.RealProMgr;   //RealPro Manager
+import org.w3c.dom.*;                      //Definition of DOM classes
+
+/**
+ * RealPro application sample loading a DSS file and realizing
+ * the Deep-Syntactic Structure (DSyntS) it contains.
+ */
+public class RealPro_DSS_File_App
+{
+  /* RealPro Manager to be instantiated once during the initialization of the application.*/
+  private RealProMgr realproMgr = null;
+
+  /**
+   * Main function called from command line.
+   *
+   * Usage:   java -classpath ... RealPro_DSS_File_App  DSS-filename
+   */
+  public static void main(String args[])
+  {
+      if (args.length < 0)
+      {
+         System.out.println("\nUsage: java -classpath ... RealPro_DSS_File_App  DSS-filename\n");
+         return;
+      }
+
+      RealPro_DSS_File_App app = new RealPro_DSS_File_App();
+
+      String dss_filename = args[0];
+      app.processDSSfile(dss_filename);
+   }
+
+  /**
+   * Class constructor.
+   */
+  public RealPro_DSS_File_App()
+  {
+      //Create an instance of RealPro Manager with its default configuration
+      System.out.println("\nInitializing RealPro (this will take few seconds) ......");
+
+      realproMgr = new RealProMgr();
+
+      //Verify if the RealPro Manager has been initialized correctly.
+      if (!realproMgr.isInitialized())
+      {
+         System.out.println("Initializing RealPro ... failed; " + realproMgr.getErrorMsg() + "\n");
+      }
+      else
+      {
+         System.out.println("Initializing RealPro ... completed.");
+      }
+  }
+
+
+  /**
+   * Method used for loading a given DSS file and processing the
+   * Deep-Syntactic Structure (DSyntS) it contains.
+   */
+   public void processDSSfile( String dss_filename )
+   {
+      try
+      {
+         //Verify if the RealPro Manager has been initialized correctly.
+         if (!realproMgr.isInitialized())
+         {
+            System.out.println("Unable to process DSS file; RealPro Manager not initialized; " + realproMgr.getErrorMsg() + "\n");
+            return;
+         }
+
+         //Load a DSS file containing the DSyntS to realize.
+         System.out.println("\nLoading DSS File: " + dss_filename);
+         org.w3c.dom.Document doc1 = realproMgr.loadDSSFile(dss_filename);
+
+         //Verify if the loading is successfully
+         if (doc1 == null)
+         {
+            System.out.println("\nLoading failed; " + realproMgr.getErrorMsg());
+            return;
+         }
+         else
+         {
+            System.out.println("\nLoading completed.\n");
+         }
+
+         //Set the tabulation for printing tree structures and sentences
+         String tabulation = "   ";
+
+         //Print the document
+         System.out.println("\nPrinting document (XML format): \n");
+         System.out.println(realproMgr.toXMLString(doc1,true,tabulation));
+
+         System.out.println("\nPrinting document (DSS format): \n");
+         System.out.println(realproMgr.toDSSString(doc1,true,tabulation));
+
+         //Retreive all DSyntSs contained in the document
+         NodeList list =  doc1.getElementsByTagName(RealProMgr.TAG_DSYNTS);
+         System.out.println("\nNumber of DSyntS in document: " + list.getLength());
+
+         //Process all DSyntSs
+         for (int i = 0; i < list.getLength(); i++)
+         {
+            //Process the ith DSyntS
+            Element dsynts = (Element)list.item(i);
+
+            System.out.println("\nPrinting DSyntS #" + (i+1) + " (XML format): \n");
+            System.out.println(realproMgr.toXMLString(dsynts,true,tabulation));
+
+            System.out.println("\nPrinting DSyntS #" + (i+1) + " (DSS format): \n");
+            System.out.println(realproMgr.toDSSString(dsynts,true,tabulation));
+
+            System.out.println("\nRealizing DSyntS...");
+            DocumentFragment fragment = realproMgr.realize(dsynts);
+
+            //If the realization is successful, print the resulting sentence structure
+            //contained in the fragment, otherwise, print the realization error message
+            if (fragment.hasChildNodes())
+            {
+               System.out.println("\nResulting sentence structure (XML format):\n");
+               System.out.println(realproMgr.toXMLString(fragment,true,tabulation));
+
+               System.out.println("\nResulting sentence string:\n");
+               System.out.println(tabulation + realproMgr.getSentenceString());
+            }
+            else
+            {
+               System.out.println("\nRealization failed:\n");
+               System.out.println(tabulation + realproMgr.getErrorMsg());
+            }
+            System.out.println();
+         }
+
+         return;
+      }
+      catch (Exception e)
+      {
+         System.out.println("\nException encountered: " + e.toString() + "\n");
+         return;
+      }
+   }
+}
+</PRE>
+</blockquote>
+
+
+
+<H3>Output Trace</H3>
+
+<blockquote>
+<PRE>
+Initializing RealPro (this will take few seconds) ......
+Initializing RealPro ... completed.
+
+Loading DSS File: dsynts.dss
+
+Loading completed.
+
+
+Printing document (XML format):
+
+toXMLString...
+   <?xml version="1.0" encoding="UTF-8"?>
+   <dsynts><dsyntnode lexeme="love"><dsyntnode lexeme="John" rel="I"></dsyntnode><dsyntnode lexeme="Mary" rel="II"></dsyntnode></dsyntnode></dsynts>
+
+Printing document (DSS format):
+
+   (org.apache.xerces.dom.DocumentImpl)
+      "love" [ lexeme:"love" ]
+      (
+         I  "John" [ lexeme:"John" rel:"I" ]
+         II  "Mary" [ lexeme:"Mary" rel:"II" ]
+      )
+
+
+Number of DSyntS in document: 1
+
+Printing DSyntS #1 (XML format):
+
+toXMLString...
+<dsynts><dsyntnode lexeme="love"><dsyntnode lexeme="John" rel="I"></dsyntnode><dsyntnode lexeme="Mary" rel="II"></dsyntnode></dsyntnode></dsynts>
+
+Printing DSyntS #1 (DSS format):
+
+   "love" [ lexeme:"love" ]
+   (
+      I  "John" [ lexeme:"John" rel:"I" ]
+      II  "Mary" [ lexeme:"Mary" rel:"II" ]
+   )
+
+
+Realizing DSyntS...
+
+Resulting sentence structure (XML format):
+
+toXMLString...
+
+
+Resulting sentence string:
+
+   John loves Mary.
+
+Press any key to continue . . .
+</PRE>
+</blockquote>
+
+
+
+<HR>
+
+
+
+
+<A NAME=Realizing-DSyntS-Loaded-From-XML-File></A>
+<BR>
+<P>
+<P>
+<BR>
+<H2>Realizing DSyntS Loaded From XML Files</H2>
+
+<H3>Description</H3>
+
+<blockquote>
+This application illustrates how to use <TT>RealPro</TT> API
+in order to load XML document files containing Deep-Syntactic Structures
+(DSyntSs) defined using the <A HREF="dsynts.html#XML_DSyntS_Formalism">XML
+DSyntS formalism</A>, and how to use <TT>RealPro</TT> API in order to
+realize these DSyntSs in batch in the document.
+</blockquote>
+
+
+<H3>Application</H3>
+
+<blockquote>
+<PRE>
+import com.cogentex.real.api.RealProMgr;   //RealPro Manager
+import org.w3c.dom.*;                      //Definition of DOM classes
+
+/**
+ * RealPro application sample loading an XML file and realizing
+ * the Deep-Syntactic Structures (DSyntSs) it contains.
+ */
+public class RealPro_XML_File_App
+{
+   /* RealPro Manager to be instantiated once during the initialization of the application.*/
+   private RealProMgr realproMgr = null;
+
+
+   /**
+   * Main function called from command line.
+   *
+   * Usage:   java -classpath ... RealPro_XML_File_App  XML-filename
+   */
+   public static void main(String args[])
+   {
+      if (args.length < 0)
+      {
+         System.out.println("\nUsage: java -classpath ... RealPro_XML_File_App  XML-filename\n");
+         return;
+      }
+
+      RealPro_XML_File_App app = new RealPro_XML_File_App();
+
+      String xml_filename = args[0];
+      app.processXMLfile(xml_filename);
+   }
+
+   /**
+   * Class constructor.
+   */
+   public RealPro_XML_File_App()
+   {
+      //Create an instance of RealPro Manager with its default configuration
+      System.out.println("\nInitializing RealPro (this will take few seconds) ......");
+
+      realproMgr = new RealProMgr();
+
+      //Verify if the RealPro Manager has been initialized correctly.
+      if (!realproMgr.isInitialized())
+      {
+         System.out.println("Initializing RealPro ... failed; " + realproMgr.getErrorMsg() + "\n");
+      }
+      else
+      {
+         System.out.println("Initializing RealPro ... completed.");
+      }
+   }
+
+
+   /**
+   * Method used for loading a given XML file and processing the
+   * Deep-Syntactic Structures (DSyntSs) it contains.
+   */
+   public void processXMLfile( String xml_filename )
+   {
+      try
+      {
+         //Verify if the RealPro Manager has been initialized correctly.
+         if (!realproMgr.isInitialized())
+         {
+            System.out.println("Unable to process XML file; RealPro Manager not initialized; " + realproMgr.getErrorMsg() + "\n");
+            return;
+         }
+
+         //Load a XML file containing some DSyntSs to realize.
+         System.out.println("\nLoading XML File: " + xml_filename);
+         org.w3c.dom.Document doc1 = realproMgr.loadXMLFile(xml_filename);
+
+         //Verify if the loading is successfully
+         if (doc1 == null)
+         {
+            System.out.println("\nLoading failed; " + realproMgr.getErrorMsg());
+            return;
+         }
+
+         //Set the tabulation for printing tree structures and sentences
+         String tabulation = "   ";
+
+
+         //Print the document
+         System.out.println("\nPrinting document (XML format): \n");
+         System.out.println(realproMgr.toXMLString(doc1,true,tabulation));
+
+
+         //Retreive all DSyntSs contained in the document.
+         //This list will be modified dynamically
+         //while the document will be modified below
+         org.w3c.dom.NodeList list =  doc1.getElementsByTagName(RealProMgr.TAG_DSYNTS);
+
+
+         //Verify if there are DSyntS to process
+         int numberOfDSyntS = list.getLength();
+         if (numberOfDSyntS == 0)
+         {
+            System.out.println("\nNo DSyntS to realize in the document.");
+            return;
+         }
+
+         //Process all DSyntSs in the list from last to the first.
+         //Backward processing is needed because the document associated
+         //with the list used in the loop is modified dynamically
+         int nb = list.getLength();
+         for (int i = nb-1; i >= 0; i--)
+         {
+            //Process the ith DSyntS
+            org.w3c.dom.Element dsynts = (Element)list.item(i);
+
+            System.out.println("\nPrinting DSyntS #" + (i+1) + " (XML format): \n");
+            System.out.println(realproMgr.toXMLString(dsynts,true,tabulation));
+
+            System.out.println("\nRealizing DSyntS...");
+            org.w3c.dom.DocumentFragment fragment = realproMgr.realize(dsynts);
+
+            //If the realization is successful, print the resulting sentence structure
+            //contained in the fragment and replace the DSyntS with the realized DSyntS
+            //in the document. Otherwise, print the realization error message.
+            if (fragment.hasChildNodes())
+            {
+               System.out.println("\nResulting sentence structure:\n");
+               System.out.println(realproMgr.toXMLString(fragment,true,tabulation));
+
+               System.out.println("\nResulting sentence string:\n");
+               System.out.println(tabulation + realproMgr.getSentenceString());
+
+               System.out.println("\nReplacing DSyntS with realized DSyntS in document...\n");
+               org.w3c.dom.Node dsyntsParent = dsynts.getParentNode();
+               dsyntsParent.replaceChild(fragment,dsynts);
+            }
+            else
+            {
+               System.out.println("\nRealization failed:\n");
+               System.out.println(tabulation + realproMgr.getErrorMsg());
+            }
+            System.out.println();
+         }
+
+         //Print the modified document after replacing all DSyntSs with
+         //realized DSyntSs
+         System.out.println("\nPrinting document with realized DSyntSs (XML format): \n");
+         System.out.println(realproMgr.toXMLString(doc1,true,tabulation));
+
+         return;
+      }
+      catch (Exception e)
+      {
+         System.out.println("\nException encountered: " + e.toString() + "\n");
+         return;
+      }
+   }
+}
+</PRE>
+</blockquote>
+
+
+<H3>Output Trace</H3>
+
+<blockquote>
+<PRE>
+Initializing RealPro (this will take few seconds) ......
+Initializing RealPro ... completed.
+
+Loading XML File: dsynts.xml
+
+Printing document (XML format):
+
+toXMLString...
+   &lt;?xml version="1.0" encoding="UTF-8"?>
+   &lt;HTML version="-//W3C//DTD HTML 4.0 Transitional//EN">
+   &lt;BODY>
+
+   &lt;H2>First Sentence Specification Sample&lt;/H2>
+
+      &lt;dsynts>
+         &lt;dsyntnode class="verb" lexeme="love" rel="nil">
+          &lt;dsyntnode class="proper_noun" lexeme="John" rel="I">&lt;/dsyntnode>
+          &lt;dsyntnode class="proper_noun" lexeme="Mary" rel="II">&lt;/dsyntnode>
+         &lt;/dsyntnode>
+      &lt;/dsynts>
+
+   &lt;H2>Second Sentence Specification Sample&lt;/H2>
+
+      &lt;dsynts>
+         &lt;dsyntnode class="verb" lexeme="love" polarity="neg" rel="nil">
+         &lt;dsyntnode class="proper_noun" lexeme="John" rel="I">&lt;/dsyntnode>
+            &lt;B>
+               &lt;dsyntnode class="proper_noun" lexeme="Mary" rel="II">&lt;/dsyntnode>
+            &lt;/B>
+         &lt;/dsyntnode>
+      &lt;/dsynts>
+
+
+   &lt;/BODY>
+   &lt;/HTML>
+
+Printing DSyntS #2 (XML format):
+
+toXMLString...
+      &lt;dsynts>
+         &lt;dsyntnode class="verb" lexeme="love" polarity="neg" rel="nil">
+         &lt;dsyntnode class="proper_noun" lexeme="John" rel="I">&lt;/dsyntnode>
+            &lt;B>
+               &lt;dsyntnode class="proper_noun" lexeme="Mary" rel="II">&lt;/dsyntnode>
+            &lt;/B>
+         &lt;/dsyntnode>
+      &lt;/dsynts>
+
+Realizing DSyntS...
+
+Resulting sentence structure:
+
+toXMLString...
+
+
+Resulting sentence string:
+
+   John does not love &lt;B>Mary&lt;/B>.
+
+Replacing DSyntS with realized DSyntS in document...
+
+
+
+Printing DSyntS #1 (XML format):
+
+toXMLString...
+      &lt;dsynts>
+         &lt;dsyntnode class="verb" lexeme="love" rel="nil">
+          &lt;dsyntnode class="proper_noun" lexeme="John" rel="I">&lt;/dsyntnode>
+          &lt;dsyntnode class="proper_noun" lexeme="Mary" rel="II">&lt;/dsyntnode>
+         &lt;/dsyntnode>
+      &lt;/dsynts>
+
+Realizing DSyntS...
+
+Resulting sentence structure:
+
+toXMLString...
+
+
+Resulting sentence string:
+
+   John loves Mary.
+
+Replacing DSyntS with realized DSyntS in document...
+
+
+
+Printing document with realized DSyntSs (XML format):
+
+toXMLString...
+   &lt;?xml version="1.0" encoding="UTF-8"?>
+   &lt;HTML version="-//W3C//DTD HTML 4.0 Transitional//EN">
+   &lt;BODY>
+
+   &lt;H2>First Sentence Specification Sample&lt;/H2>
+
+      John loves Mary.
+
+   &lt;H2>Second Sentence Specification Sample&lt;/H2>
+
+      John does not love &lt;B>Mary&lt;/B>.
+
+
+   &lt;/BODY>
+   &lt;/HTML>
+Press any key to continue . . .
+</PRE>
+</blockquote>
+
+
+</BODY>
+
+</HTML>

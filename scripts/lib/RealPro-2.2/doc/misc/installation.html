@@ -1,0 +1,233 @@
+<HTML>
+<TITLE>
+RealPro
+</TITLE>
+
+<BODY>
+<H1>Installation</H1>
+
+This section describes how to install <TT>RealPro</TT> from the ZIP file distribution file
+<B>RealPro-X.Y.zip</B>, where <B>X.Y</B> is a version number.
+<P>
+In order to install this version of <TT>RealPro</TT> follow these steps:
+<P>
+<OL>
+<P>
+<LI><A HREF="#platform">Determine the Installation Platform;</A>
+<P>
+<LI><A HREF="#extract">Extract the content of the <TT>RealPro</TT> distribution file;</A>
+<P>
+<LI><A HREF="#serialnumber">Set your <TT>RealPro</TT> serial number;</A>
+<P>
+<LI><A HREF="#classpaths">Set your Java class paths to <TT>RealPro</TT> Java libraries;</A>
+<P>
+<LI><A HREF="#test">Test your installation.</A>
+</OL>
+
+
+<A NAME=platform></A>
+<P>
+<BR>
+<P>
+<H2>Determine the Installation Platform</H2>
+
+The <TT>RealPro</TT> distribution file <B>RealPro-X.Y.zip</B> can be installed on platforms
+running any of the following operating systems:
+
+<UL>
+<LI>Microsoft Windows 98/NT/2000/XP
+<LI>Linux
+<LI>Unix
+</UL>
+
+
+<A NAME=extract></A>
+<P>
+<BR>
+<P>
+<H2>Extracting the <TT>RealPro</TT> Distribution File</H2>
+
+The <TT>RealPro</TT> distribution file can be extracted using standard extraction
+utilities supporting the ZIP format.  Sun's Microsystem Java Development Environment
+(see <A HREF="requirements.html#jdk">RealPro's Software Requirements</A>) provides a <B>jar</B> utility
+that can be used to extract the content of ZIP file as follow:
+
+<blockquote>
+
+      <B>jar &nbsp; -xvf  &nbsp; RealPro-X.Y.zip</B>
+
+</blockquote>
+
+Determine an extraction directory where to extract the <TT>RealPro</TT> distribution file
+<B>RealPro-X.Y.zip</B>.  <B>The full path of this installation directory should not
+contain any spaces since this can cause some problems with locating files.</B>
+<P>
+Extract the content <TT>RealPro</TT> distribution file <B>RealPro-X.Y.zip</B>
+in the extraction directory using a ZIP utility supporting long file names.
+This will create a directory named <B>RealPro-X.Y</B>.
+<P>
+In the remaining of this document, the term <B>RealPro-Installation-Directory</B> refers
+to the full path of the extracted directory <B>RealPro-X.Y</B>
+(e.g. <i>c:\myapps\RealPro-X.Y</i> on MS Windows, <i>/myapps/RealPro-X.Y</i> on Linux);
+<P>
+
+
+
+
+<A NAME=serialnumber></A>
+<P>
+<BR>
+<P>
+<H2>Setting your <TT>RealPro</TT> Serial Number</H2>
+
+<TT>RealPro</TT> must be configured with a <B>serial number</B> needed to use <TT>RealPro</TT>
+API and <TT>RealPro</TT> utilities.  This serial number is generally sent by e-mail and
+consists in an alpha-numerical string with the following pattern:
+<P>
+	<blockquote>
+	<TT>WWWW-XXXX-YYYY-ZZZZ</TT>
+	</blockquote>
+</P>
+
+After receiving your <TT>RealPro</TT> serial number, configures your <TT>RealPro</TT>
+installation in the following way:
+
+<OL>
+<LI>Go in the directory <B>RealPro-Installation-Directory/lib</B> (i.e. the subdirectory
+<B>lib</B> found under the directory <B>RealPro-X.Y</B> where RealPro was extracted).
+<P>
+<LI>Edit the file <B>RealPro.properties</B> in the following way:
+<P>
+<PRE>
+<B>Replace the line:</B> RealPro_SN = WWWW-XXXX-YYYY-ZZZZ
+<P>
+<B>By:</B>               RealPro_SN = <I>Your-RealPro-Serial-Number</I>
+</PRE>
+where <I>Your-RealPro-Serial-Number</I> is the <TT>RealPro</TT> serial number that you
+have received by e-mail.
+</P>
+</OL>
+
+
+<A NAME=classpaths></A>
+<P>
+<BR>
+<P>
+<H2>Setting Java Class Paths to <TT>RealPro</TT> Java Libraries</H2>
+
+In order to use <TT>RealPro</TT> API or <TT>RealPro</TT> utilities,
+the six following items must be in your Java class paths (the three
+Apache Software Foundation's libraries are standard libraries used
+for RealPro API):
+<P>
+<TABLE border=1 cellpadding=8>
+ <tr valign=bottom>
+		  <td align=left><B>Path-to-RealPro-Installation-Directory/lib</B></td>
+		  <td colspan=2>Path to RealPro properties file <B>RealPro.properties</B>
+		  where the RealPro serial number is defined.</td>
+ </tr>
+
+ <tr valign=bottom>
+		  <td align=left><B>Path-to-RealPro-Installation-Directory/lib/rpw.jar</B></td>
+		  <td colspan=2>RealPro engine library</td>
+ </tr>
+
+ <tr valign=bottom>
+		  <td align=left><B>Path-to-RealPro-Installation-Directory/lib/rpw-lkb.jar</B></td>
+		  <td colspan=2>RealPro knowledge base library</td>
+ </tr>
+
+ <tr valign=bottom>
+		  <td align=left>
+		  <B>Path-to-RealPro-Installation-Directory/lib/xalan.jar</B>
+		  </td>
+		  <td colspan=2>Apache Software Foundation's Xalan library</td>
+ </tr>
+
+  <tr valign=bottom>
+ 		  <td align=left>
+ 		  <B>Path-to-RealPro-Installation-Directory/lib/xercesImpl.jar</B>
+ 		  </td>
+ 		  <td colspan=2>Apache Software Foundation's Xerces library</td>
+  </tr>
+
+
+ <tr valign=bottom>
+		  <td align=left>
+		  <B>Path-to-RealPro-Installation-Directory/lib/xml-apis.jar</B>
+		  </td>
+		  <td colspan=2>Apache Software Foundation's XML library</td>
+ </tr>
+
+</TABLE>
+
+<P>
+
+where <B>Path-to-RealPro-Installation-Directory</B> is the absolute or relative path
+to the directory <B>RealPro-X.Y</B> found in the path <B>RealPro-Installation-Directory</B>.
+
+<P>
+
+For example, to run a Java application using <TT>RealPRo</TT>, the following
+scripts can be used:
+<P>
+<blockquote>
+<B>On Windows Platform</B>
+<P>
+<blockquote>
+<PRE>
+set DIR=c:/myapps/RealPro-X.Y
+set CLASSPATH=%DIR/lib;%DIR/lib/rpw.jar;%DIR/lib/rpw-lkb.jar;%DIR/xalan.jar;%DIR/xml-apis.jar;%DIR/xercesImpl.jar
+java -classpath  %CLASSPATH  YourJavaRealProApplication
+</PRE>
+</blockquote>
+</blockquote>
+
+<P>
+
+<blockquote>
+<B>On Unix Platform</B>
+<P>
+<blockquote>
+<PRE>
+#!/bin/sh
+setenv DIR /user/home/myself/myapps/RealPro-X.Y
+setenv CLASSPATH $DIR/lib:$DIR/lib/rpw.jar:$DIR/lib/rpw-lkb.jar:$DIR/xalan.jar:$DIR/xml-apis.jar:$DIR/xercesImpl.jar
+java -classpath  $CLASSPATH  YourJavaRealProApplication
+</PRE>
+</blockquote>
+</blockquote>
+
+<P>
+See the Java documentation for alternative configuration of the class paths.
+<P>
+Note that when running Java graphical applications such as <TT>RealPro Workshop</TT>,
+one of <TT>RealPro</TT> utility,  the look and feel may differ from one Java setting
+to another, on Unix platform in particular.
+
+
+<A NAME=test></A>
+<P>
+<BR>
+<P>
+<H2>Testing Your Installation</H2>
+
+You can test your installation by running the following script found under the
+<B>RealPro-Installation-Directory</B>:
+<P>
+   <blockquote>
+   <B>rpw.bat</B> (for Microsoft Windows platform)
+   <P>
+   <B>rpw.unix</B> or <B>sh rpw.unix</B> (for Unix or Linux platform)
+   </blockquote>
+<P>
+If your installation is completed, running the above script will start,
+<TT>RealPro Workshop</TT>, a <TT>RealPro</TT> Java utility for editing
+Deep-Syntactic Structures, and open its GUI on the screen.
+
+<P>
+<BR>
+
+</BODY>
+
+</HTML>

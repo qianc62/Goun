@@ -1,0 +1,383 @@
+<HTML>
+<TITLE>
+RealPro
+</TITLE>
+
+<BODY>
+<H1>Deep-Syntactic Structures</H1>
+
+<UL>
+<LI><A HREF="#Background">Background on Syntactic Dependency</A></LI>
+<LI><A HREF="#DSS_DSyntS_Formalism">Representing DSyntS Using DSS Formalism</A></LI>
+<LI><A HREF="#XML_DSyntS_Formalism">Representing DSyntS Using XML Formalism</A></LI>
+</UL>
+
+
+
+<A NAME=Background></A>
+<P>
+<BR>
+<H2>Background on Syntactic Dependency</H2>
+
+	The input to <TT>RealPro</TT> is a syntactic dependency representation for
+	a sentence or sentence fragment.  This amounts to a specification for the
+	lexical and syntactic composition of the future sentence in a formalism called
+	a Deep-Syntactic Structure or "DSyntS" for short.  The formalism is based on
+	the <A HREF="references.html#REF_MTT">Meaning-Text Theory</A> (MTT) of Igor Mel'cuk
+	and colleagues.  According to this formalism, a sentence specification has the
+	following salient features:
+
+	<UL>
+		<LI>Each DSyntS is a tree with labeled nodes and labeled arcs.
+		<P>
+		<LI>A DSyntS is lexicalized, meaning that the nodes are labeled with lexemes
+		(uninflected words) from the target language.
+		<P>
+		<LI>A DSyntS is a dependency representation and not a phrase-structure
+		representation: there are no nonterminal nodes (such as VPs), and all nodes
+		are labeled with lexemes.
+		<P>
+		<LI>A DSyntS is a syntactic representation, meaning that the arcs of the
+		tree are labeled with syntactic relations such as SUBJECT, rather than
+		conceptual (or "semantic") relations such as "agent".
+		<P>
+		<LI>The DSyntS is a deep syntactic representation, meaning that only
+		meaning-bearing lexemes are represented, and not function words.
+    </UL>
+	This means that <TT>RealPro</TT> does not perform the task of lexical choice:
+	the input to <TT>RealPro</TT> must specify all meaning-bearing lexemes.
+	Furthermore there is no non-determinism in <TT>RealPro</TT>, since the rules
+	are applied in the order in which they are defined, without backtracking.
+	This means that the input to <TT>RealPro</TT> fully determines the output,
+	but it represents it at a very abstract level, which is well-suited for
+	interfacing with knowledge-based applications.
+
+
+
+<A NAME=DSS_DSyntS_Formalism></A>
+<P>
+<BR>
+<H2>Representing DSyntS Using DSS Formalism</H2>
+
+DSyntS can be specified using a file-based format named DSS, which is
+the file format used in <TT>RealPro</TT> for representing DSyntS
+prior to the adoption of an <A HREF="http://www.w3.org/XML" target=new>XML</A>-based
+file format.
+<P>
+Below are two examples of
+DSS-based specification of DSyntS followed by the <TT>RealPro</TT> BNF
+grammar defining the syntax for DSS-based DSyntSs.
+<P>
+<P>
+For a list of the current linguistic attributes and their possible
+values, see the <A HREF="../grammar/English-grammar.html" target=new>RealPro General English Grammar User Manual.</A>.
+
+<P>
+<H3>First Example of DSS-DSyntS Specification:</H3>
+
+The following example of DSS-based DSyntS specification represents
+the DSyntS for the sentence:
+<blockquote>
+<PRE>
+  John loves Mary.
+</PRE>
+</blockquote>
+<P>
+<blockquote>
+<PRE>
+  DSYNTS:
+      love [ class:"verb" ]
+      (
+    	  I  John [ class:"proper_noun" ]
+    	  II Mary [ class:"proper_noun" ]
+      )
+  END:
+</PRE>
+</blockquote>
+
+<P>
+
+<H3>Second Example of DSS-DSyntS Specification:</H3>
+
+The following example of DSS-based DSyntS specification represents
+the DSyntS for the sentence:
+<blockquote>
+<PRE>
+  John loves &lt;B>Mary&lt;/B>.
+</PRE>
+</blockquote>
+<P>
+where the  <A HREF="http://www.w3.org/MarkUp" target=new>HTML</A> tag
+for boldness, <B>B</B>, is introduced in the
+DSyntS as an attribute (or feature).
+
+<P>
+<blockquote>
+<PRE>
+  DSYNTS:
+      love [ class:"verb" ]
+      (
+    	  I  John [ class:"proper_noun" ]
+    	  II Mary [ class:"proper_noun" sgml:"B" ]
+      )
+  END:
+</PRE>
+</blockquote>
+
+
+
+<H2>BNF Grammar for DSS DSyntS File Format</H2>
+
+<blockquote>
+<table border=1 cellpadding=8>
+
+ <tr valign=bottom>
+		  <td align=left>Sentence-DSyntS-Pair</td>
+		  <td colspan=2>(Sentence) DSyntS</td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>Sentence</td>
+ 		  <td colspan=2>'OUTPUT:'  StringToken   'END:'</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>DSyntS</td>
+ 		  <td colspan=2>'DSYNTS:'  LexemeLabel (FeatureList) (DSyntRelations)  'END:'</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>LexemeLabel</td>
+ 		  <td colspan=2>LabelToken</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>FeatureList</td>
+ 		  <td colspan=2>'['  Feature*  ']'</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>Feature</td>
+ 		  <td colspan=2> (FeatureScope ':')  FeatureName  ':'  FeatureValue</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>FeatureScope</td>
+ 		  <td colspan=2> 'between' | 'begin' | 'end'</td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>FeatureName</td>
+ 		  <td colspan=2> LabelToken </td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>FeatureValue</td>
+ 		  <td colspan=2> LabelToken </td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>DSyntRelations</td>
+ 		  <td colspan=2> '('  DSyntRelation*  ')' </td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>DSyntRelation</td>
+ 		  <td colspan=2> RelationLabel  LexemeLabel (FeatureList) (DSyntRelations) </td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>RelationLabel</td>
+ 		  <td colspan=2> 'I' | 'II' | 'III' | 'IV' | 'ATTR' | 'DESC-ATTR' | 'APPEND' </td>
+ </tr>
+
+
+ <tr valign=bottom>
+ 		  <td align=left>LabelToken</td>
+ 		  <td colspan=2>QuotedLabelToken | UnquotedLabelToken</td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>QuotedLabelToken</td>
+ 		  <td colspan=2> '"' StringToken  '"'</td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>UnquotedLabelToken</td>
+ 		  <td colspan=2><I>Any combination of characters except spacing</I></td>
+ </tr>
+
+ <tr valign=bottom>
+ 		  <td align=left>StringToken</td>
+ 		  <td colspan=2><I>Any combination of characters</I></td>
+ </tr>
+
+</table>
+</blockquote>
+
+
+
+
+<A NAME=XML_DSyntS_Formalism></A>
+<P>
+<BR>
+<H2>Representing DSyntS Using XML Formalism</H2>
+
+DSyntS can be specified using an <A HREF="http://www.w3.org/XML" target=new>XML</A>
+file-based format that can be used to embed DSyntS in any
+<A HREF="http://www.w3.org/XML" target=new>XML</A>-based structure.
+<P>
+Below are two examples of
+<A HREF="http://www.w3.org/XML" target=new>XML</A>-based specification of DSyntS followed by the <TT>RealPro</TT> DTD
+defining the syntax for defining <A HREF="http://www.w3.org/XML" target=new>XML</A>-based
+DSyntSs.
+<P>
+For a list of the current linguistic attributes and their possible
+values, see the <A HREF="../grammar/English-grammar.html" target=new>RealPro General English Grammar User Manual.</A>.
+
+<P>
+<H3>First Example of XML-DSyntS Specification:</H3>
+
+The following example of <A HREF="http://www.w3.org/XML" target=new>XML</A>-based DSyntS specification represents
+the DSyntS for the sentence:
+<blockquote>
+<PRE>
+  John loves Mary.
+</PRE>
+</blockquote>
+<P>
+<blockquote>
+<PRE>
+  &lt;dsynts>
+      &lt;dsyntnode lexeme="love" class="verb" rel="nil">
+    	  &lt;dsyntnode lexeme="John" class="proper_noun" rel="I"/>
+    	  &lt;dsyntnode lexeme="Mary" class="proper_noun" rel="II"/>
+      &lt;/dsyntnode>
+   &lt;/dsynts>
+</PRE>
+</blockquote>
+
+<P>
+
+<H3>Second Example of XML-DSyntS Specification:</H3>
+
+The following example of <A HREF="http://www.w3.org/XML" target=new>XML</A>-based
+DSyntS specification represents the DSyntS for the sentence:
+<blockquote>
+<PRE>
+  John loves &lt;B>Mary&lt;/B>.
+</PRE>
+</blockquote>
+<P>
+where the <A HREF="http://www.w3.org/MarkUp" target=new>HTML</A> tag for boldness,
+<B>B</B>, is used within the structure.
+
+<P>
+<blockquote>
+<PRE>
+   &lt;dsynts>
+      &lt;dsyntnode lexeme="love" class="verb" polarity="neg" rel="nil">
+    	 &lt;dsyntnode lexeme="John" class="proper_noun" rel="I"/>
+    	    &lt;B>
+    	       &lt;dsyntnode lexeme="Mary" class="proper_noun" rel="II"/>
+    	    &lt;/B>
+      &lt;/dsyntnode>
+   &lt;/dsynts>
+</PRE>
+</blockquote>
+
+
+<H3>DTD Grammar for XML DSyntS File Format</H3>
+
+<blockquote>
+<PRE>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?>
+
+&lt;!-- DSyntS specification -->
+
+&lt;!ELEMENT sentence-dsynts-pair (sentence,dsynts)>
+&lt;!ELEMENT sentence (#PCDATA)>
+&lt;!ELEMENT dsynts (dsyntnode|fontstyle)?>
+&lt;!ELEMENT dsyntnode (dsyntnode|fontstyle)*>
+&lt;!ATTLIST dsyntnode
+	    lexeme CDATA #REQUIRED
+	    rel (I|II|III|IV|ATTR|APPEND|DESC-ATTR|COORD|nil) #REQUIRED
+	    sgml CDATA #IMPLIED
+	    adjective   CDATA #IMPLIED
+	    article   CDATA #IMPLIED
+	    aspect   CDATA #IMPLIED
+	    animated   CDATA #IMPLIED
+	    case   CDATA #IMPLIED
+	    caps   CDATA #IMPLIED
+	    class   CDATA #IMPLIED
+	    day   CDATA #IMPLIED
+	    determinant   CDATA #IMPLIED
+	    extrapo   CDATA #IMPLIED
+	    form   CDATA #IMPLIED
+	    format   CDATA #IMPLIED
+	    fronted-wh-dep   CDATA #IMPLIED
+	    gender   CDATA #IMPLIED
+	    inflection   CDATA #IMPLIED
+	    invert   CDATA #IMPLIED
+	    isbracket   CDATA #IMPLIED
+	    ishtml   CDATA #IMPLIED
+	    isparenthesis   CDATA #IMPLIED
+	    isperiod   CDATA #IMPLIED
+	    ispoint   CDATA #IMPLIED
+	    ispunct   CDATA #IMPLIED
+	    location   CDATA #IMPLIED
+	    manner   CDATA #IMPLIED
+	    measure-unit   CDATA #IMPLIED
+	    month   CDATA #IMPLIED
+	    mood   CDATA #IMPLIED
+	    morpheme   CDATA #IMPLIED
+	    noun   CDATA #IMPLIED
+	    number   CDATA #IMPLIED
+	    person   CDATA #IMPLIED
+	    phon   CDATA #IMPLIED
+	    polarity   CDATA #IMPLIED
+	    position   CDATA #IMPLIED
+	    possessive   CDATA #IMPLIED
+	    pre_consonant   CDATA #IMPLIED
+	    pre_vowel   CDATA #IMPLIED
+	    pred   CDATA #IMPLIED
+	    priority   CDATA #IMPLIED
+	    pro   CDATA #IMPLIED
+	    punct   CDATA #IMPLIED
+	    question   CDATA #IMPLIED
+	    node-real   CDATA #IMPLIED
+	    tree-real   CDATA #IMPLIED
+	    ref   CDATA #IMPLIED
+	    relative   CDATA #IMPLIED
+	    rheme   CDATA #IMPLIED
+	    scope   CDATA #IMPLIED
+	    starting_place   CDATA #IMPLIED
+	    starting_point   CDATA #IMPLIED
+	    starting_time   CDATA #IMPLIED
+	    state   CDATA #IMPLIED
+	    subordinate   CDATA #IMPLIED
+	    suggestion   CDATA #IMPLIED
+	    taxis   CDATA #IMPLIED
+	    tense   CDATA #IMPLIED
+	    time   CDATA #IMPLIED
+	    transitive   CDATA #IMPLIED
+	    verb   CDATA #IMPLIED
+	    verbal   CDATA #IMPLIED
+	    voice   CDATA #IMPLIED
+	    wh   CDATA #IMPLIED
+	    year   CDATA #IMPLIED
+>
+</PRE>
+</blockquote>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML SYSTEM "../../dtd/dsynts.dtd">
+
+<HTML>
+<BODY>
+
+<H2>First Sentence Specification Sample</H2>
+
+   <dsynts>
+      <dsyntnode lexeme="love" class="verb" rel="nil">
+    	  <dsyntnode lexeme="John" class="proper_noun" rel="I"/>
+    	  <dsyntnode lexeme="Mary" class="proper_noun" rel="II"/>	
+      </dsyntnode>
+   </dsynts>
+
+<H2>Second Sentence Specification Sample</H2>
+
+   <dsynts>
+      <dsyntnode lexeme="love" class="verb" polarity="neg" rel="nil">
+    	 <dsyntnode lexeme="John" class="proper_noun" rel="I"/>
+    	    <B>
+    	       <dsyntnode lexeme="Mary" class="proper_noun" rel="II"/>	
+    	    </B>
+      </dsyntnode>  
+   </dsynts>
+
+<H2>Third Sentence Specification Sample</H2>
+
+   <dsynts>
+      <dsyntnode lexeme="love" class="verb" question="+" rel="nil">
+    	 <dsyntnode lexeme="John" class="proper_noun" rel="I"/>
+    	    <B>
+    	       <dsyntnode lexeme="Mary" class="proper_noun" rel="II"/>	
+    	    </B>
+      </dsyntnode>  
+   </dsynts>
+
+</BODY>
+</HTML>

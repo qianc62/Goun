@@ -1,0 +1,215 @@
+<HTML>
+<TITLE>
+RealPro
+</TITLE>
+
+<BODY>
+<H1>RealPro Workshop</H1>
+
+
+
+<H2>Introduction</H2>
+
+This distribution is provided with <TT>RealPro Workshop</TT> GUI, a Java application
+containing a simple graphical editor for deep-syntactic structures.
+Once a source language DSyntS has been defined or loaded,  it can
+then be realized in the target language (English by default).
+
+<P>
+<TT>RealPro Workshop</TT> is intended for two main goals:
+<UL>
+	<LI> Helping a developer verify the DSyntS processing;
+	<LI> Helping a new user learn about DSyntS representations and
+         their processing in <TT>RealPro Workshop</TT>.
+</UL>
+<P>
+
+
+
+
+<H2>GUI Description</H2>
+
+The following figure gives a snapshot of <TT>RealPro Workshop</TT> GUI.
+<P>
+<CENTER>
+<IMG src="../images/RPW-screenshot.gif" border=0 ALT="RPW"></A>
+<BR>
+<B>Figure 1: RealPro Workshop GUI</B>
+</CENTER>
+
+<P>
+
+<TT>RealPro Workshop</TT> GUI is composed of 7 main areas:
+
+<P>
+<OL>
+  <LI> "Top Bar Area"... Consists of the top menu items including:
+  <P>
+  <UL>
+	<LI>"File"... Functions to open and save DSyntS.
+	<LI>"Process"... Functions to process step by step the DSyntS (Not available in evaluation version).
+	<LI>"Log"... Functions to control the error/trace logs (Not available in evaluation version).
+	<LI>"View"... Functions to control the display/hiding of widgets.
+	<LI>"Options"... Functions to set the realization configuration.
+	<LI>"Help"... Functions to display information about <TT>RealPro Workshop</TT>.
+  </UL>
+  <P>
+
+  <LI> "Expected Output Area" (Optional)... Displays the intended output sentence
+	(or phrase) as defined in the field "OUTPUT" in the DSyntS text file.
+  <P>
+
+  <LI> "Input DSyntS Area"... Area below the "Input" label displaying the DSyntS
+	as a tree structure.  Supports only mouse click and no direct editing.
+  <P>
+
+  <LI> "Node Editing Window Area"... Text area below the DSyntS Area used to edit
+	the DSynt node currently selected.
+  <P>
+
+  <LI> "Tree Editing Button Area"... Buttons directly below the Node Editing Window
+      Area used to modify the DSyntS structure by operating on the node currently
+	selected in the DSyntS Area: "Promote", "Demote", "Up", "Down", "Delete", "New".
+  <P>
+
+  <LI> "Realize Button Area"... Button directly below the Tree Editing Button Area for
+     realizing the current DSyntS.
+  <P>
+
+  <LI> "Resulting Sentence Area"... Bottom text area below the "Result" label used to display
+     a generated sentence after realization.
+</OL>
+
+
+
+
+
+<H2>Loading a Deep-Syntactic Structure from a TEXT File</H2>
+
+The <TT>RealPro Workshop</TT> GUI can let the user load a deep-syntactic structure
+from a specification contained in a TEXT file.
+<P>
+
+To open a DSyntS specified in a TEXT file, follow these steps:
+<P>
+<OL>
+  <LI> From <TT>RealPro Workshop</TT> GUI, select the menu item <B>"File | Open"</B>;
+  <P>
+  <LI> Use the file browser to select a DSyntS to open (default extension *.dss).
+</OL>
+
+<P>
+If opening is successful, the DSyntS will be displayed as a tree structure
+in the <TT>RealPro Workshop</TT> GUI under the label "input".  If opening is not successful,
+an error message is displayed in a message box.
+
+<P>
+Several examples of DSyntS files are provided with this distribution
+under the directory "DSyntS".  The document "RealPro General English
+Grammar User Manual" also contains several examples
+and describes the feature system for English realization.
+<P>
+Here is an example of valid TEXT specification:
+<P>
+<PRE>
+   OUTPUT:
+   This is a test.
+   END:
+
+   DSYNTS:
+
+   BE [ class:verb ]
+   (
+     I  THIS [ class:demonstrative_pronoun number:sg ]
+     II TEST [ class:common_noun article:indef ]
+   )
+
+   END:
+</PRE>
+
+<P>
+In this specification, "OUTPUT" is an optional field giving the expected
+output for documentation purposes.  The field "DSYNTS" specifies the actual
+DSyntS.
+<P>
+Note that in order to be loaded properly, the feature system used in the
+DSyntS must correspond to the one described in the user manual.
+<P>
+
+
+
+<H2>Creating a New Deep-Syntactic Structure</H2>
+
+To create a new Deep-Syntactic Structure from <TT>RealPro Workshop</TT> GUI, follow these
+steps:
+<P>
+<OL>
+  <LI> Save if necessary the current DSyntS; otherwise, it will be lost.
+  <P>
+  <LI> Click on the button "New" found below the DSyntS area.
+  <P>
+  <LI> Type the node specification in the "Node Editing Window".
+  <P>
+  <LI> Edit the DSyntS.
+</OL>
+
+
+
+
+
+<H2>Editing an Existing Deep-Syntactic Structure</H2>
+
+To edit an existing Deep-Syntactic Structure displayed in <TT>RealPro Workshop</TT> GUI,
+follow these steps:
+<P>
+
+<OL>
+  <LI> In the DSyntS Area, click on a node to modify.
+  <P>
+
+  <LI> After a node in the DSyntS Area has been selected, its content (lexeme
+     label and features) will be displayed in the Node Editing Window Area.
+     To edit the information, just type and/or delete characters in the string,
+     then press the "Update" button to confirm the changes.
+  <P>
+
+  <LI> When editing a DSyntS node Ni, the syntax to follow is the following:
+       <P>
+       <UL>
+		  <LI> Ri  Li [ Fi1 Fi2 Fi3 ... Fin ]
+	   </UL>
+       <P>
+      where
+       <P>
+      <UL>
+
+		<LI> Ri is the relation name with its governor (none if Ni is the root).
+       <P>
+		<LI> Li is the lexeme label.
+       <P>
+		<LI> Each Fij is a feature associated with the node.
+	  </UL>
+       <P>
+	 E.g.
+       <P>
+       <UL>
+		<LI> I  BOOK  [ class:common_noun number:sg ]
+	   </UL>
+       <P>
+
+	When editing a DSyntS node in the Node Editing Window Area, at least one
+	space must separate:
+       <P>
+       <UL>
+		<LI> the relation name from the lexeme label
+		<LI> the lexeme label from the opening bracket '['
+		<LI> a feature from a bracket '[' or ']'
+		<LI> a feature from another feature
+	   </UL>
+</OL>
+
+
+
+</BODY>
+
+</HTML>
