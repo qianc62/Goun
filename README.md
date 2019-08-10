@@ -2,7 +2,7 @@
 
 Goun is a structured-based process model interpreter. It takes a process model (such as Petri Net) as input, and outputs the descriptions of the model.
 
-You can refer to the CAiSE 2017 paper “***Structural Descriptions of Process Models Based on Goal-Oriented Unfolding***” for more details.
+You can refer to the CAiSE 2017 paper “[***Structural Descriptions of Process Models Based on Goal-Oriented Unfolding***](https://link.springer.com/chapter/10.1007/978-3-319-59536-8_25 "***Structural Descriptions of Process Models Based on Goal-Oriented Unfolding***")” for more details.
 
 ## Overview
 
@@ -29,4 +29,5 @@ Please consider citing the following paper when using our code or pretrained mod
   year={2017}
 }
 ```
+
 
