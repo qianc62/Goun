@@ -6,9 +6,9 @@ You can refer to the CAiSE 2017 paper “[***Structural Descriptions of Process 
 
 ## Overview
 
-- scripts/ 
+- code/ 
   contains the source codes.
-- dataset/ 
+- data/ 
   contains the raw and processed process models used for evaluating our approach.
 
 ### Reqirements:
