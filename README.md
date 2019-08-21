@@ -19,7 +19,7 @@ You can refer to the CAiSE 2017 paper “[***Structural Descriptions of Process 
 
 ### Citation
 
-Please consider citing the following paper when using our code or pretrained models for your application.
+When referencing, please cite this paper as:
 
 ```
 @inproceedings{Goun,
