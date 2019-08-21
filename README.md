@@ -9,7 +9,7 @@ You can refer to the CAiSE 2017 paper “[***Structural Descriptions of Process 
 - code/ 
   contains the source codes.
 - data/ 
-  contains the raw and processed process models used for evaluating our approach.
+  contains some process model examples used for evaluating.
 
 ### Reqirements:
 
