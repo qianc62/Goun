@@ -23,10 +23,10 @@ If you find this project helps, please kindly consider citing this paper as:
 
 ```
 @inproceedings{Goun,
-	title = {Structural Descriptions of Process Models Based on Goal-Oriented Unfolding},
-	author = {Chen Qian and Lijie Wen and Jianmin Wang and Akhil Kumar and Haoran Li},
-	booktitle = {Proceedings of The 29th International Conference on Advanced Information Systems Engineering (CAiSE)},
-	year = {2017},
-	pages = {397-412}
+  title = {Structural Descriptions of Process Models Based on Goal-Oriented Unfolding},
+  author = {Chen Qian and Lijie Wen and Jianmin Wang and Akhil Kumar and Haoran Li},
+  booktitle = {Proceedings of The 29th International Conference on Advanced Information Systems Engineering (CAiSE)},
+  year = {2017},
+  pages = {397-412}
 }
 ```
